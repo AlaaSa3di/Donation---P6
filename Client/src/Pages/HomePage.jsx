@@ -1,8 +1,8 @@
 import React from "react";
 import Hero from "../Components/Hero";
-import EducationSection from "../components/EducationSection";
-import StatsSection from "../components/StatsSection"; // استدعاء السيكشن الثالث
-import ContactSection from "../components/ContactSection";
+import EducationSection from "../Components/EducationSection";
+import StatsSection from "../Components/StatsSection"; // استدعاء السيكشن الثالث
+import ContactSection from "../Components/ContactSection";
 // import Chatbot from "../components/Chatbot";
 const HomePage = () => {
   return (

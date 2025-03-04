@@ -31,7 +31,6 @@ const Navbar = () => {
                     <Link to="/about" className="text-lg font-medium text-[#940066] hover:text-[#b00077] transition-all duration-300">من نحن</Link>
                     <Link to="/SuccessStoriesCards" className="text-lg font-medium text-[#940066] hover:text-[#b00077] transition-all duration-300">قصص نجاح</Link>
                     <Link to="/contact" className="text-lg font-medium text-[#940066] hover:text-[#b00077] transition-all duration-300">تواصل معنا</Link>
-                    <Link to="/signin" className="text-lg font-medium text-[#940066] hover:text-[#b00077] transition-all duration-300">تسجيل الدخول</Link>
 
                     <Link
                         to="/donate"
