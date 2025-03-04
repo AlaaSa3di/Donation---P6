@@ -20,7 +20,12 @@ dotenv.config();
 const app = express();
 app.use(cookieParser());
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // حدد عنوان الواجهة الأمامية
+    credentials: true, // السماح بإرسال ملفات تعريف الارتباط (cookies)
+  })
+);
 app.use(express.json());
 // إعداد الـ Body-Parser
 app.use(bodyParser.json());

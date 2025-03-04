@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { login } from "../redux/userSlice"; // استيراد الإجراء لتحديث Redux
+import { login } from "../Redux/userSlice"; // استيراد الإجراء لتحديث Redux
 
-const signin = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -91,11 +91,11 @@ const signin = () => {
         </form>
         
         <p className="mt-6 text-center text-gray-600">
-          ليس لديك حساب؟ <a href="/signUp" className="text-[#940066] hover:text-[#671F79] font-medium">إنشاء حساب</a>
+          ليس لديك حساب؟ <a href="/register" className="text-[#940066] hover:text-[#671F79] font-medium">إنشاء حساب</a>
         </p>
       </div>
     </div>
   );
 };
 
-export default signin;
+export default Login;

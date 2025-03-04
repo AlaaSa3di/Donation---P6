@@ -2,20 +2,13 @@ const { User, Sequelize } = require("../models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+
 require("dotenv").config();
 
+// إنشاء حساب مستخدم جديد مع تشفير كلمة المرور وإنشاء JWT Token
 const createUser = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      role,
-      status,
-      phoneNumber,
-      address,
-    } = req.body;
+    const { firstName, lastName, email, password, role, status, phoneNumber, address } = req.body;
 
     // التحقق من وجود البريد الإلكتروني مسبقًا
     const existingUser = await User.findOne({ where: { email } });
@@ -52,9 +45,7 @@ const createUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 أيام
     });
 
-    return res
-      .status(201)
-      .json({ message: "User created successfully", user: newUser, token });
+    return res.status(201).json({ message: "User created successfully", user: newUser, token });
   } catch (error) {
     console.error("Error creating user:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -104,6 +95,60 @@ const logoutUser = (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({ message: "Logged out successfully" });
 };
+
+// الحصول على الملف الشخصي للمستخدم
+const getProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] }, // استبعاد كلمة المرور من البيانات
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// تحديث بيانات المستخدم
+const updateProfile = async (req, res) => {
+  const { firstName, lastName, phoneNumber, address } = req.body;
+
+  try {
+    // التحقق من التوكن وفك تشفيره للحصول على معرف المستخدم
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "Please log in first" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    // العثور على المستخدم وتحديث بياناته
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // تحديث بيانات المستخدم في قاعدة البيانات
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.phoneNumber = phoneNumber || user.phoneNumber;
+    user.address = address || user.address;
+    await user.save();
+
+    return res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 
 const getUsersExcludingAdmin = async (req, res) => {
   try {
@@ -201,6 +246,8 @@ module.exports = {
   updateUserStatus,
   loginUser,
   logoutUser,
+  getProfile,
   getUserCount,
   createUser,
+  updateProfile
 };
