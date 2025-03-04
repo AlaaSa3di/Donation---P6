@@ -20,14 +20,6 @@ The goal of **Aroma** is to empower university students by providing a seamless 
 - **Seamless Donation Experience:** A simple and user-friendly platform that makes supporting students effortless.
 .
 
-## 👥 Our Team
-
-- **Ahlam momani** - Scrum Master (SM)
-- **Deyaa-Abualrub** - Product Owner (PO)
-- **hala abushehab** - Quality Assurance (QA)
-- **Alaa Sa'adi** - Team Member
-- **mostafa-obiedat** - Team Member
-- **marya-benyan** - Team Member
 
 ## 🏗 Business Model
 
