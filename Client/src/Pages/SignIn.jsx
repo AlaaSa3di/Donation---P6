@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { login } from "../Redux/userSlice"; // استيراد الإجراء لتحديث Redux
+import Swal from "sweetalert2"; // استيراد sweetalert2
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -36,21 +37,27 @@ const Login = () => {
       });
   
       const { token, user } = response.data;
+      console.log("User Data:", user);
   
-      // حفظ التوكن في الكوكيز
+      // حفظ التوكن في الكوكيز وlocalStorage
       Cookies.set("token", token, { expires: 7 });
+      localStorage.setItem("token", token);
   
       // تحديث حالة المستخدم في Redux
-      dispatch(login(user));
+      dispatch(login({ user, token })); // استخدام الإجراء الجديد
   
-      alert("تم تسجيل الدخول بنجاح!");
-      navigate("/");
+            // عرض رسالة نجاح باستخدام SweetAlert
+            Swal.fire({
+              icon: "success",
+              title: "تم تسجيل الدخول بنجاح!",
+              confirmButtonText: "موافق",
+            });
+      
+      navigate(user.email === "admin@admin.com" ? "/dashboard/overview" : "/");
     } catch (err) {
-      setError( "خطأ في البريد الالكتروني او كلمة المرور");
+      setError("خطأ في البريد الالكتروني أو كلمة المرور");
     }
   };
-  
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 py-8">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border border-purple-100">
@@ -91,7 +98,7 @@ const Login = () => {
         </form>
         
         <p className="mt-6 text-center text-gray-600">
-          ليس لديك حساب؟ <a href="/register" className="text-[#940066] hover:text-[#671F79] font-medium">إنشاء حساب</a>
+          ليس لديك حساب؟ <a href="/signup" className="text-[#940066] hover:text-[#671F79] font-medium">إنشاء حساب</a>
         </p>
       </div>
     </div>
