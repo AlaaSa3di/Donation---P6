@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2"; // استيراد sweetalert2
+import Cookies from "js-cookie";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -70,17 +71,28 @@ const Register = () => {
 
     // إذا كانت جميع البيانات صحيحة، نقوم بإرسالها للخادم
     try {
-      await axios.post("http://localhost:4000/api/register", formData);
-            // عرض رسالة نجاح باستخدام SweetAlert
-            Swal.fire({
-              icon: "success",
-              title: "تم التسجيل بنجاح ",
-              text: "الر جاء تسجيل الدخول",
-              confirmButtonText: "موافق",
-            });
-      
-      navigate("/signin");
+      const response = await axios.post("http://localhost:4000/api/register", formData);
+  
+      const { token, user } = response.data; // استخراج التوكن وبيانات المستخدم
+  
+      // تخزين التوكن وبيانات المستخدم في localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+  
+      // تخزين التوكن في الكوكيز
+      Cookies.set("token", token, { expires: 7 }); // تنتهي بعد 7 أيام
+  
+      // عرض رسالة نجاح باستخدام SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "تم التسجيل بنجاح ",
+        text: "تم تسجيل دخولك تلقائيًا",
+        confirmButtonText: "موافق",
+      });
+  
+      navigate("/"); // إعادة التوجيه إلى الصفحة الرئيسية
     } catch (err) {
+      console.error("Error during registration:", err.response?.data || err.message);
       setError(err.response?.data?.message || "فشل التسجيل");
     }
   };
